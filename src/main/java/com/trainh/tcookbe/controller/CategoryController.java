@@ -1,6 +1,8 @@
 package com.trainh.tcookbe.controller;
 
 import com.trainh.tcookbe.config.GlobalExceptionHandler;
+import com.trainh.tcookbe.dto.category.CategoryDto;
+import com.trainh.tcookbe.model.entity.Category;
 import com.trainh.tcookbe.payload.request.category.CreateCategoriesForBlogRequest;
 import com.trainh.tcookbe.payload.request.category.CreateCategoryRequest;
 import com.trainh.tcookbe.payload.response.MessageResponse;
@@ -12,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 @CrossOrigin(origins = "${trainh.app.cross-origin}")
@@ -25,6 +29,16 @@ public class CategoryController {
     public CategoryController(CategoryService categoryService, GlobalExceptionHandler validationExceptionHandler) {
         this.categoryService = categoryService;
         this.validationExceptionHandler = validationExceptionHandler;
+    }
+
+    @GetMapping("/get-all-category-by-active-status")
+    public ResponseEntity<?> getAllCategoryByActiveStatus() {
+         List<CategoryDto> categories = categoryService.getAllCategoryByActiveStatus();
+        if(categories != null) {
+            return ResponseEntity.ok(categories);
+        } else {
+            return ResponseEntity.badRequest().body(new MessageResponse("Error some thing!"));
+        }
     }
 
     @PostMapping("/create-category")

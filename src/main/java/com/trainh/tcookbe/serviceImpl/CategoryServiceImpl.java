@@ -1,5 +1,7 @@
 package com.trainh.tcookbe.serviceImpl;
 
+import com.trainh.tcookbe.dto.category.CategoryDto;
+import com.trainh.tcookbe.mapper.CategoryMapper;
 import com.trainh.tcookbe.model.entity.Blog;
 import com.trainh.tcookbe.model.entity.Category;
 import com.trainh.tcookbe.model.entity.Status;
@@ -13,9 +15,8 @@ import com.trainh.tcookbe.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -76,5 +77,20 @@ public class CategoryServiceImpl implements CategoryService {
             return "Create categories for blog failed";
         }
         return null;
+    }
+
+    @Override
+    public List<CategoryDto> getAllCategoryByActiveStatus() {
+        List<Category> categories = new ArrayList<Category>();
+        List<CategoryDto> categoriesDto = new ArrayList<>();
+        try {
+           categories = categoryRepository.findAllByStatusName(EStatus.ACTIVE);
+            categoriesDto = categories.stream().map(
+                CategoryMapper.INSTANCE::categoryToDto
+           ).toList();
+        } catch (Exception e) {
+            return null;
+        }
+        return categoriesDto;
     }
 }

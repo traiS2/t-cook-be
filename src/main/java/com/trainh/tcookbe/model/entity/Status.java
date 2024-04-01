@@ -17,8 +17,11 @@ public class Status {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @NotBlank
     @Enumerated(EnumType.STRING)
     @Column(length = 20)
     private EStatus name;
+
+    public Status(EStatus name) {
+        this.name = name;
+    }
 }

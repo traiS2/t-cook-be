@@ -20,8 +20,11 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotBlank
     @Enumerated(EnumType.STRING)
     @Column(length = 20)
     private ERole name;
+
+    public Role(ERole name) {
+        this.name = name;
+    }
 }
