@@ -1,4 +1,4 @@
-package com.trainh.tcookbe.dto.account;
+package com.trainh.tcookbe.model.dto.account;
 
 import com.trainh.tcookbe.model.entity.User;
 import jakarta.persistence.*;

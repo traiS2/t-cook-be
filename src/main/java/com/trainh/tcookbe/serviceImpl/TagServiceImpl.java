@@ -1,5 +1,9 @@
 package com.trainh.tcookbe.serviceImpl;
 
+import com.trainh.tcookbe.mapper.tag.TagSummaryMapper;
+import com.trainh.tcookbe.model.dto.tag.TagDto;
+import com.trainh.tcookbe.mapper.TagMapper;
+import com.trainh.tcookbe.model.dto.tag.TagSummaryDto;
 import com.trainh.tcookbe.model.entity.Blog;
 import com.trainh.tcookbe.model.entity.Tag;
 import com.trainh.tcookbe.payload.request.tag.CreateTagRequest;
@@ -35,8 +39,7 @@ public class TagServiceImpl implements TagService {
             } else {
                 tagRepository.save(tag);
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return "Create tag failed";
         }
         return null;
@@ -71,5 +74,18 @@ public class TagServiceImpl implements TagService {
             return "Create tags for blog failed";
         }
         return null;
+    }
+
+    @Override
+    public List<TagSummaryDto> getAllTag() {
+        try {
+            List<Tag> tags = tagRepository.findAll();
+            return
+                    tags.stream().map(
+                            TagSummaryMapper.INSTANCE::tagSummaryToDto
+                    ).toList();
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

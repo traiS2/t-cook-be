@@ -2,6 +2,7 @@
 package com.trainh.tcookbe.secutiry.services;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.trainh.tcookbe.model.entity.Account;
 import com.trainh.tcookbe.model.entity.User;
 import com.trainh.tcookbe.model.enums.EStatus;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,7 +15,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class UserDetailsImplement implements UserDetails {
-    private int id;
+    private long id;
     private String username;
     @JsonIgnore
     private String password;
@@ -27,7 +28,7 @@ public class UserDetailsImplement implements UserDetails {
     public UserDetailsImplement() {
     }
 
-    public UserDetailsImplement(int id, String username, String password, String firstName, String lastName, Enum<EStatus> status,  Collection<? extends GrantedAuthority> authorities) {
+    public UserDetailsImplement(long id, String username, String password, String firstName, String lastName, Enum<EStatus> status,  Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -37,18 +38,16 @@ public class UserDetailsImplement implements UserDetails {
         this.authorities = authorities;
     }
 
-    public static UserDetailsImplement build(User user) {
+    public static UserDetailsImplement build(User user, Account account) {
 
         List<GrantedAuthority> authorities = user.getRoles().stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName().name()))
                 .collect(Collectors.toList());
 
-
-
         return new UserDetailsImplement(
                 user.getId(),
-                user.getAccount().getUsername(),
-                user.getAccount().getPassword(),
+                account.getUsername(),
+                account.getPassword(),
                 user.getFirstName(),
                 user.getLastName(),
                 user.getStatus().getName(),
@@ -56,7 +55,7 @@ public class UserDetailsImplement implements UserDetails {
 
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 

@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public class CreateBlogRequest {
-    private String name;
+    private String title;
     private String image;
     private String introduction;
     private int levelOfDifficult;

@@ -20,8 +20,9 @@ public class DataLoader {
     private final PasswordEncoder passwordEncoder;
     private final PrimaryCategoryRepository primaryCategoryRepository;
     private final CategoryRepository categoryRepository;
+    private final TagRepository tagRepository;
 
-    public DataLoader(RoleRepository roleRepository, StatusRepository statusRepository, UserRepository userRepository, AccountRepository accountRepository, PasswordEncoder passwordEncoder, PrimaryCategoryRepository primaryCategoryRepository, CategoryRepository categoryRepository) {
+    public DataLoader(RoleRepository roleRepository, StatusRepository statusRepository, UserRepository userRepository, AccountRepository accountRepository, PasswordEncoder passwordEncoder, PrimaryCategoryRepository primaryCategoryRepository, CategoryRepository categoryRepository, TagRepository tagRepository) {
         this.roleRepository = roleRepository;
         this.statusRepository = statusRepository;
         this.userRepository = userRepository;
@@ -29,6 +30,7 @@ public class DataLoader {
         this.passwordEncoder = passwordEncoder;
         this.primaryCategoryRepository = primaryCategoryRepository;
         this.categoryRepository = categoryRepository;
+        this.tagRepository = tagRepository;
     }
 
     @PostConstruct
@@ -37,6 +39,7 @@ public class DataLoader {
         loadStatusData();
         loadUserData();
         loadPrimaryCategory();
+        loadTag();
         loadCategory();
     }
 
@@ -88,7 +91,6 @@ public class DataLoader {
             user.setRoles(rolesUser);
             user.setStatus(statusOptional.get());
             Account accountUser = new Account("user", passwordEncoder.encode("123456"));
-            userRepository.save(user);
             accountUser.setUser(user);
             accountRepository.save(accountUser);
 
@@ -96,27 +98,25 @@ public class DataLoader {
             rolesMod.add(roleModeratorOptional.get());
             User mod = new User("mod", "mod");
             mod.setStatus(statusOptional.get());
-            userRepository.save(mod);
             Account accountMod = new Account("mod", passwordEncoder.encode("123456"));
             mod.setRoles(rolesMod);
             accountMod.setUser(mod);
             accountRepository.save(accountMod);
 
 
-            rolesAdmin.add(roleAdminOptional.get());
+            rolesMod.add(roleAdminOptional.get());
             User admin = new User("admin", "admin");
-            admin.setRoles(rolesAdmin);
             admin.setStatus(statusOptional.get());
-            userRepository.save(admin);
             Account accountAdmin = new Account("admin", passwordEncoder.encode("123456"));
-            accountMod.setUser(admin);
+            admin.setRoles(rolesAdmin);
+            accountAdmin.setUser(admin);
             accountRepository.save(accountAdmin);
         }
     }
 
     private void loadPrimaryCategory() {
         if (primaryCategoryRepository.count() == 0) {
-            Optional<Status> statusOptional = statusRepository.findByName(EStatus.ACTIVE);
+            Optional<Status> statusOptional = statusRepository.findByName(EStatus.SHOW);
             if (statusOptional.isPresent()) {
                 List<PrimaryCategory> primaryCategories = Arrays.asList(
                         new PrimaryCategory("Nguyên liệu", statusOptional.get()),
@@ -143,6 +143,16 @@ public class DataLoader {
                 );
                 categoryRepository.saveAll(categories);
             }
+        }
+    }
+
+    private void loadTag() {
+        if (tagRepository.count() == 0) {
+            List<Tag> tags = Arrays.asList(
+                    new Tag("bánh"),
+                    new Tag("chè")
+            );
+            tagRepository.saveAll(tags);
         }
     }
 }

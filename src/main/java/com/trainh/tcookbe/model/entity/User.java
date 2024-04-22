@@ -1,21 +1,21 @@
 package com.trainh.tcookbe.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Set;
 
 @Entity
 @Table(name = "`user`")
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
 
     @Column(name = "first_name", columnDefinition = "nvarchar(255)")
     private String firstName;
@@ -23,7 +23,7 @@ public class User {
     @Column(name = "last_name", columnDefinition = "nvarchar(255)")
     private String lastName;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_role",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name="role_id", referencedColumnName = "id"))
@@ -33,11 +33,7 @@ public class User {
     @JoinColumn(name = "status_id", referencedColumnName = "id")
     private Status status;
 
-    @OneToOne(mappedBy = "user")
-    private Account account;
-
     public User(Account account, Set<Role> roles) {
-        this.account = account;
         this.roles = roles;
     }
 
@@ -46,10 +42,9 @@ public class User {
         this.lastName = lastName;
     }
 
-    public User(String firstName, String lastName, Set<Role> roles, Account account) {
+    public User(String firstName, String lastName, Set<Role> roles) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.roles = roles;
-        this.account = account;
     }
 }

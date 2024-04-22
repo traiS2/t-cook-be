@@ -36,13 +36,14 @@ public class LoginByUsernameServiceImpl implements LoginService<LoginByUsernameR
     @Override
     public ResponseEntity<?> login(LoginByUsernameRequest loginRequest) {
 
+
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
             );
         } catch (AuthenticationException e) {
             if (e instanceof BadCredentialsException) {
-                return ResponseEntity.badRequest().body("Incorrect password");
+                return ResponseEntity.status(401).body(new MessageResponse("Invalid username or password"));
             } else {
                 return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
             }

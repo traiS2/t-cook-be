@@ -1,4 +1,4 @@
-package com.trainh.tcookbe.dto.user;
+package com.trainh.tcookbe.model.dto.user;
 
 import com.trainh.tcookbe.model.entity.Account;
 import com.trainh.tcookbe.model.entity.Role;

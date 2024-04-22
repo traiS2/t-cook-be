@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface PrimaryCategoryRepository extends JpaRepository<PrimaryCategory, Integer> {
+public interface PrimaryCategoryRepository extends JpaRepository<PrimaryCategory, Long> {
     Optional<PrimaryCategory> findByName(String name);
 }

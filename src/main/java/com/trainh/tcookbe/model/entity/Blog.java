@@ -1,11 +1,10 @@
 package com.trainh.tcookbe.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
@@ -13,11 +12,15 @@ import java.util.Set;
 @Table(name = "blog")
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-public class Blog {
+@Getter
+@Setter
+public class Blog implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
+
+    @Column(name = "link", columnDefinition = "varchar(255)")
+    private String link;
 
     @Column(name = "name", columnDefinition = "nvarchar(500)")
     private String name;
@@ -25,11 +28,7 @@ public class Blog {
     @Column(name = "image", columnDefinition = "varchar(255)")
     private String image;
 
-    @Column(name = "introduction", columnDefinition = "nvarchar(1000)")
-    private String introduction;
-
     @Column(name = "level_of_difficult")
-    @Size(min = 1, max = 5)
     private int levelOfDifficult;
 
     @Column(name = "cooking_time")
@@ -38,11 +37,13 @@ public class Blog {
     @Column(name = "serving_size", columnDefinition = "nvarchar(255)")
     private String serving_size;
 
-    @ManyToOne
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    @ManyToOne
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "status_id", referencedColumnName = "id")
     private Status status;
 
@@ -52,33 +53,44 @@ public class Blog {
     @Column(name = "update_at")
     private Date updateAt;
 
-    @OneToMany(mappedBy = "blog", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Ingredient> ingredient;
+//    @JsonIgnore
+    @OneToMany(mappedBy = "blog", cascade = CascadeType.ALL)
+    private Set<Introduction> introduction;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "blog", cascade = CascadeType.ALL)
+    private Set<Ingredient> ingredients;
+
+    @ManyToMany
     @JoinTable(name = "tag_blog",
             joinColumns = @JoinColumn(name = "blog_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name="tag_id", referencedColumnName = "id"))
     private Set<Tag> tags;
 
-    @OneToMany(mappedBy = "blog", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "blog", cascade = CascadeType.ALL)
     private Set<Recipe> recipes;
 
-    @ManyToMany
+    @ManyToMany()
     @JoinTable(name = "category_blog",
             joinColumns = @JoinColumn(name = "blog_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name="category_id", referencedColumnName = "id"))
     private Set<Category> categories;
 
-    public Blog(String name, String image, String introduction, int levelOfDifficult, int cookingTime, String serving_size, Status status, Date createAt, User user) {
+    public Blog(String link, String name, String image, int levelOfDifficult, int cookingTime, String serving_size, User user, Status status, Date createAt, Set<Introduction> introduction, Set<Ingredient> ingredients, Set<Tag> tags, Set<Recipe> recipes, Set<Category> categories) {
+        this.link = link;
         this.name = name;
         this.image = image;
-        this.introduction = introduction;
         this.levelOfDifficult = levelOfDifficult;
         this.cookingTime = cookingTime;
         this.serving_size = serving_size;
+        this.user = user;
         this.status = status;
         this.createAt = createAt;
-        this.user = user;
+        this.introduction = introduction;
+        this.ingredients = ingredients;
+        this.tags = tags;
+        this.recipes = recipes;
+        this.categories = categories;
     }
+
+
 }

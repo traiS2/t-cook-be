@@ -1,9 +1,8 @@
 package com.trainh.tcookbe.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Set;
 
@@ -11,32 +10,33 @@ import java.util.Set;
 @Table(name = "recipe")
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 public class Recipe {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
 
-    @Column(name = "title", columnDefinition = "nvarchar(1000)")
-    private String title;
+    @Column(name = "name", columnDefinition = "nvarchar(1000)")
+    private String name;
 
     private int step;
 
-    @Column(name = "name", columnDefinition = "nvarchar(1000)")
-    private String description;
-
-    @Column(name = "image", columnDefinition = "varchar(200)")
+    @Column(name = "image", columnDefinition = "varchar(500)")
     private String image;
 
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<DetailsRecipe> detailsRecipe;
+
+    @JsonIgnore
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "blog_id", referencedColumnName = "id")
     private Blog blog;
 
-    public Recipe(String title, int step, String description, String image, Blog blog) {
-        this.title = title;
+    public Recipe(String name, int step, String image, Set<DetailsRecipe> detailsRecipe) {
+        this.name = name;
         this.step = step;
-        this.description = description;
-        this.blog = blog;
         this.image = image;
+        this.detailsRecipe = detailsRecipe;
     }
 }

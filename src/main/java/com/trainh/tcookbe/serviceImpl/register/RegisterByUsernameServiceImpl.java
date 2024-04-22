@@ -77,6 +77,6 @@ public class RegisterByUsernameServiceImpl implements RegisterService<RegisterBy
     }
 
     private boolean existsUsername(String username) {
-        return userRepository.existsUserByAccount_Username(username);
+        return accountRepository.existsByUsername(username);
     }
 }

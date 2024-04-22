@@ -27,8 +27,8 @@ public class RecipeServiceImpl implements RecipeService {
         try {
             Optional<Blog> blogOptional = blogRepository.findById(request.getBlogId());
             if (blogOptional.isPresent()) {
-                Recipe recipe = new Recipe(request.getTitle().trim(),request.getStep(), request.getDescription().trim(), request.getImage(), blogOptional.get());
-                recipeRepository.save(recipe);
+                //Recipe recipe = new Recipe(request.getTitle().trim(),request.getStep(), request.getDescription().trim(), request.getImage(), blogOptional.get());
+                //recipeRepository.save(recipe);
             } else {
                 return "Create recipe failed";
             }

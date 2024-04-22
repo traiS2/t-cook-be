@@ -1,7 +1,7 @@
 package com.trainh.tcookbe.serviceImpl;
 
-import com.trainh.tcookbe.dto.category.CategoryDto;
-import com.trainh.tcookbe.mapper.CategoryMapper;
+import com.trainh.tcookbe.mapper.CategoryBriefMapper;
+import com.trainh.tcookbe.model.dto.category.CategoryDto;
 import com.trainh.tcookbe.model.entity.Blog;
 import com.trainh.tcookbe.model.entity.Category;
 import com.trainh.tcookbe.model.entity.Status;
@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -35,7 +34,7 @@ public class CategoryServiceImpl implements CategoryService {
     public String createCategory(CreateCategoryRequest request) {
         try {
             Optional<Status> statusOptional = statusRepository.findByName(EStatus.HIDE);
-            if(statusOptional.isPresent()) {
+            if (statusOptional.isPresent()) {
                 Category category = new Category(request.getName().trim(), statusOptional.get());
             } else {
                 return "Create category failed";
@@ -54,13 +53,13 @@ public class CategoryServiceImpl implements CategoryService {
             int blogId = request.getBlogId();
             List<Integer> categories = request.getCategories();
             Optional<Blog> blogOptional = blogRepository.findById(blogId);
-            if(blogOptional.isPresent()) {
+            if (blogOptional.isPresent()) {
                 Blog blog = blogOptional.get();
                 Set<Category> categorySet = blog.getCategories();
-                for(int categoryId : categories) {
+                for (long categoryId : categories) {
                     Optional<Category> categoryOptional = categoryRepository.findById(categoryId);
                     Category category;
-                    if(categoryOptional.isPresent()) {
+                    if (categoryOptional.isPresent()) {
                         category = categoryOptional.get();
                     } else {
                         return "Category not found";
@@ -80,17 +79,14 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<CategoryDto> getAllCategoryByActiveStatus() {
-        List<Category> categories = new ArrayList<Category>();
-        List<CategoryDto> categoriesDto = new ArrayList<>();
+    public List<CategoryDto> getAllCategoryByShowStatus() {
         try {
-           categories = categoryRepository.findAllByStatusName(EStatus.ACTIVE);
-            categoriesDto = categories.stream().map(
-                CategoryMapper.INSTANCE::categoryToDto
-           ).toList();
+            return categoryRepository.findAllByStatusName(EStatus.SHOW).stream()
+                    .map(
+                            CategoryBriefMapper.INSTANCE::categoryToDto
+                    ).toList();
         } catch (Exception e) {
             return null;
         }
-        return categoriesDto;
     }
 }
