@@ -5,15 +5,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class RecipeBlogCreationRequest {
+public class DetailRecipeBlogCreationRequest {
     private long id;
-    private String name;
-    private List<DetailRecipeBlogCreationRequest> detailRecipe;
-    private String image;
+    private String content;
 }

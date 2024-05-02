@@ -1,7 +1,7 @@
 package com.trainh.tcookbe.serviceImpl;
 
-import com.trainh.tcookbe.mapper.CategoryBriefMapper;
-import com.trainh.tcookbe.model.dto.category.CategoryDto;
+import com.trainh.tcookbe.mapper.BriefCategoryMapper;
+import com.trainh.tcookbe.model.dto.category.CategoryDTO;
 import com.trainh.tcookbe.model.entity.Blog;
 import com.trainh.tcookbe.model.entity.Category;
 import com.trainh.tcookbe.model.entity.Status;
@@ -79,11 +79,11 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<CategoryDto> getAllCategoryByShowStatus() {
+    public List<CategoryDTO> getAllCategoryByShowStatus() {
         try {
             return categoryRepository.findAllByStatusName(EStatus.SHOW).stream()
                     .map(
-                            CategoryBriefMapper.INSTANCE::categoryToDto
+                            BriefCategoryMapper.INSTANCE::categoryToDto
                     ).toList();
         } catch (Exception e) {
             return null;

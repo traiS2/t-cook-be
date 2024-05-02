@@ -1,8 +1,7 @@
 package com.trainh.tcookbe.payload.request.login;
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -10,9 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public class LoginByUsernameRequest {
-    @NotBlank(message = "Username is required")
+    @NotEmpty(message = "Username is required")
     private String username;
 
-    @NotBlank(message = "Password is required")
+    @NotEmpty(message = "Password is required")
     private String password;
 }

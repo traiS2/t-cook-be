@@ -1,4 +1,4 @@
-package com.trainh.tcookbe.model.dto.category;
+package com.trainh.tcookbe.payload.request.ingredient;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,9 +9,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class CategoryDto {
-    private int id;
-
+public class IngredientBlogCreationRequest {
+    private long id;
     private String name;
-
 }

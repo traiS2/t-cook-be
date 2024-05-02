@@ -1,8 +1,6 @@
 package com.trainh.tcookbe.serviceImpl;
 
 import com.trainh.tcookbe.mapper.tag.TagSummaryMapper;
-import com.trainh.tcookbe.model.dto.tag.TagDto;
-import com.trainh.tcookbe.mapper.TagMapper;
 import com.trainh.tcookbe.model.dto.tag.TagSummaryDto;
 import com.trainh.tcookbe.model.entity.Blog;
 import com.trainh.tcookbe.model.entity.Tag;
@@ -53,7 +51,7 @@ public class TagServiceImpl implements TagService {
             Optional<Blog> blogOptional = blogRepository.findById(blogId);
             if (blogOptional.isPresent()) {
                 Blog blog = blogOptional.get();
-                Set<Tag> tagSet = blog.getTags();
+                Set<Tag> tagSet = blog.getTag();
                 for (int tagId : tagsId) {
                     Optional<Tag> tagOptional = tagRepository.findById(tagId);
                     Tag tag;
@@ -64,7 +62,7 @@ public class TagServiceImpl implements TagService {
                     }
                     tagSet.add(tag);
                 }
-                blog.setTags(tagSet);
+                blog.setTag(tagSet);
                 blogRepository.save(blog);
             } else {
                 return "Blog not found";

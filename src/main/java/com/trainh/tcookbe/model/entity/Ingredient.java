@@ -1,6 +1,6 @@
 package com.trainh.tcookbe.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.trainh.tcookbe.model.id.IngredientPk;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -10,21 +10,25 @@ import lombok.*;
 @NoArgsConstructor
 @Getter
 @Setter
-
+@IdClass(IngredientPk.class)
 public class Ingredient {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @Column(name = "name", columnDefinition = "nvarchar(255)")
     private String name;
 
-    @JsonIgnore
+    @Id
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "blog_id", referencedColumnName = "id")
     private Blog blog;
 
     public Ingredient(String name) {
+        this.name = name;
+    }
+
+    public Ingredient(long id, String name) {
+        this.id = id;
         this.name = name;
     }
 }

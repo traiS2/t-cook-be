@@ -1,6 +1,6 @@
 package com.trainh.tcookbe.model.projection.blog;
 
-public interface BlogBriefProjection {
+public interface BriefBlogProjection {
     long getId();
 
     String getLink();

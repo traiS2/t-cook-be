@@ -1,7 +1,7 @@
 package com.trainh.tcookbe.controller;
 
 import com.trainh.tcookbe.config.GlobalExceptionHandler;
-import com.trainh.tcookbe.model.dto.category.CategoryDto;
+import com.trainh.tcookbe.model.dto.category.CategoryDTO;
 import com.trainh.tcookbe.payload.request.category.CreateCategoriesForBlogRequest;
 import com.trainh.tcookbe.payload.request.category.CreateCategoryRequest;
 import com.trainh.tcookbe.payload.response.MessageResponse;
@@ -34,7 +34,7 @@ public class CategoryController {
     @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR')")
     @GetMapping("/get-all-category-by-show-status")
     public ResponseEntity<?> getAllCategoryByActiveStatus() {
-        List<CategoryDto> categories = categoryService.getAllCategoryByShowStatus();
+        List<CategoryDTO> categories = categoryService.getAllCategoryByShowStatus();
         if (categories != null) {
             return ResponseEntity.ok(categories);
         } else {

@@ -1,5 +1,7 @@
 package com.trainh.tcookbe.model.dto.blog;
 
+import com.trainh.tcookbe.model.dto.introduction.IntroductionDTO;
+import com.trainh.tcookbe.model.dto.tag.TagDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,13 +15,13 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-public class BlogSummaryDto {
+public class SummaryBlogDTO {
     private long id;
     private String link;
     private String name;
     private String image;
     private Date createAt;
-    private List<String> introduction;
-    private List<String> tags;
+    private List<IntroductionDTO> introduction;
+    private List<TagDTO> tags;
     private String user;
 }

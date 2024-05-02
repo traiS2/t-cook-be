@@ -19,7 +19,7 @@ public class Blog implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "link", columnDefinition = "varchar(255)")
+    @Column(name = "link", columnDefinition = "varchar(255)", unique = true)
     private String link;
 
     @Column(name = "name", columnDefinition = "nvarchar(500)")
@@ -35,7 +35,7 @@ public class Blog implements Serializable {
     private int cookingTime;
 
     @Column(name = "serving_size", columnDefinition = "nvarchar(255)")
-    private String serving_size;
+    private String servingSize;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
@@ -64,7 +64,7 @@ public class Blog implements Serializable {
     @JoinTable(name = "tag_blog",
             joinColumns = @JoinColumn(name = "blog_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name="tag_id", referencedColumnName = "id"))
-    private Set<Tag> tags;
+    private Set<Tag> tag;
 
     @OneToMany(mappedBy = "blog", cascade = CascadeType.ALL)
     private Set<Recipe> recipes;
@@ -75,19 +75,19 @@ public class Blog implements Serializable {
             inverseJoinColumns = @JoinColumn(name="category_id", referencedColumnName = "id"))
     private Set<Category> categories;
 
-    public Blog(String link, String name, String image, int levelOfDifficult, int cookingTime, String serving_size, User user, Status status, Date createAt, Set<Introduction> introduction, Set<Ingredient> ingredients, Set<Tag> tags, Set<Recipe> recipes, Set<Category> categories) {
+    public Blog(String link, String name, String image, int levelOfDifficult, int cookingTime, String servingSize, User user, Status status, Date createAt, Set<Introduction> introduction, Set<Ingredient> ingredients, Set<Tag> tag, Set<Recipe> recipes, Set<Category> categories) {
         this.link = link;
         this.name = name;
         this.image = image;
         this.levelOfDifficult = levelOfDifficult;
         this.cookingTime = cookingTime;
-        this.serving_size = serving_size;
+        this.servingSize = servingSize;
         this.user = user;
         this.status = status;
         this.createAt = createAt;
         this.introduction = introduction;
         this.ingredients = ingredients;
-        this.tags = tags;
+        this.tag = tag;
         this.recipes = recipes;
         this.categories = categories;
     }

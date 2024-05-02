@@ -2,8 +2,9 @@ package com.trainh.tcookbe.repository;
 
 import com.trainh.tcookbe.model.entity.Blog;
 import com.trainh.tcookbe.model.enums.EStatus;
-import com.trainh.tcookbe.model.projection.blog.BlogBriefProjection;
-import com.trainh.tcookbe.model.projection.blog.BlogSummaryProjection;
+import com.trainh.tcookbe.model.projection.blog.BlogDetailsProjection;
+import com.trainh.tcookbe.model.projection.blog.BriefBlogProjection;
+import com.trainh.tcookbe.model.projection.blog.SummaryBlogProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -15,6 +16,7 @@ public interface BlogRepository extends JpaRepository<Blog, Long> {
     Optional<Blog> findById(long id);
     List<?> getAllByStatusName(EStatus status);
     Optional<Blog> findBlogByLink(String link);
-    List<BlogBriefProjection> findFirst3ByStatusNameOrderByCreateAtDesc(EStatus status);
-    List<BlogSummaryProjection> findFirst5ByStatusNameOrderByCreateAtDesc(EStatus status);
+    List<BriefBlogProjection> findFirst3ByStatusNameOrderByCreateAtDesc(EStatus status);
+    List<SummaryBlogProjection> findFirst5ByStatusNameOrderByCreateAtDesc(EStatus status);
+    List<BlogDetailsProjection> findBlogByStatusName(EStatus status);
 }

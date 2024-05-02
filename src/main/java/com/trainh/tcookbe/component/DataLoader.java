@@ -94,6 +94,13 @@ public class DataLoader {
             accountUser.setUser(user);
             accountRepository.save(accountUser);
 
+            rolesMod.add(roleAdminOptional.get());
+            User admin = new User("admin", "admin");
+            admin.setStatus(statusOptional.get());
+            Account accountAdmin = new Account("admin", passwordEncoder.encode("123456"));
+            admin.setRoles(rolesAdmin);
+            accountAdmin.setUser(admin);
+            accountRepository.save(accountAdmin);
 
             rolesMod.add(roleModeratorOptional.get());
             User mod = new User("mod", "mod");
@@ -104,13 +111,7 @@ public class DataLoader {
             accountRepository.save(accountMod);
 
 
-            rolesMod.add(roleAdminOptional.get());
-            User admin = new User("admin", "admin");
-            admin.setStatus(statusOptional.get());
-            Account accountAdmin = new Account("admin", passwordEncoder.encode("123456"));
-            admin.setRoles(rolesAdmin);
-            accountAdmin.setUser(admin);
-            accountRepository.save(accountAdmin);
+
         }
     }
 
@@ -133,7 +134,7 @@ public class DataLoader {
 
     private void loadCategory() {
         if (categoryRepository.count() == 0) {
-            Optional<Status> statusOptional = statusRepository.findByName(EStatus.ACTIVE);
+            Optional<Status> statusOptional = statusRepository.findByName(EStatus.SHOW);
             Optional<PrimaryCategory> primaryCategoryOptional = primaryCategoryRepository.findByName("Bánh 3 miền");
             if (statusOptional.isPresent() && primaryCategoryOptional.isPresent()) {
                 List<Category> categories = Arrays.asList(

@@ -1,17 +1,15 @@
-package com.trainh.tcookbe.model.dto.blog;
+package com.trainh.tcookbe.payload.request.introduction;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
-public class BlogBriefDto {
+public class IntroductionBlogCreationRequest {
     private long id;
-    private String link;
-    private String name;
-    private String image;
+    private String content;
 }

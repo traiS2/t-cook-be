@@ -1,11 +1,10 @@
 package com.trainh.tcookbe.controller;
 
 import com.trainh.tcookbe.config.GlobalExceptionHandler;
-import com.trainh.tcookbe.model.dto.blog.BlogBriefDto;
-import com.trainh.tcookbe.model.dto.blog.BlogSummaryDto;
+import com.trainh.tcookbe.model.dto.blog.BriefBlogDTO;
+import com.trainh.tcookbe.model.dto.blog.SummaryBlogDTO;
 import com.trainh.tcookbe.model.entity.Blog;
 import com.trainh.tcookbe.payload.request.blog.BlogCreationRequest;
-import com.trainh.tcookbe.payload.request.blog.CreateBlogRequest;
 import com.trainh.tcookbe.payload.response.MessageResponse;
 import com.trainh.tcookbe.service.BlogService;
 import jakarta.validation.Valid;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,7 +40,7 @@ public class BlogController {
         if (errorMessage != null) {
             return ResponseEntity.badRequest().body(new MessageResponse(errorMessage));
         } else {
-            String message = blogService.blogCreation(request);
+            String message = blogService.createBlog(request);
             if (message != null) {
                 return ResponseEntity.badRequest().body(new MessageResponse(message));
             } else {
@@ -51,12 +49,12 @@ public class BlogController {
         }
     }
 
-    @GetMapping("/get-blog-brief")
-    public ResponseEntity<?> getBlogBrief() {
+    @GetMapping("/get-brief-blog")
+    public ResponseEntity<?> getBriefBlog() {
         try {
-            List<BlogBriefDto> blogBriefs = blogService.getBlogBrief();
-            if(blogBriefs != null) {
-                return ResponseEntity.ok(blogBriefs);
+            List<BriefBlogDTO> briefBlogs = blogService.getBriefBlog();
+            if(briefBlogs != null) {
+                return ResponseEntity.ok(briefBlogs);
             } else {
                 return ResponseEntity.badRequest().body(new MessageResponse("Error some thing!"));
             }
@@ -65,10 +63,10 @@ public class BlogController {
         }
     }
 
-    @GetMapping("/get-blog-summary")
-    public ResponseEntity<?> getBlogSummary() {
+    @GetMapping("/get-summary-blog")
+    public ResponseEntity<?> getSummaryBlog() {
         try {
-            List<BlogSummaryDto> blogSummaries = blogService.getBlogSummary();
+            List<SummaryBlogDTO> blogSummaries = blogService.getSummaryBlog();
             if(blogSummaries != null) {
                 return ResponseEntity.ok(blogSummaries);
             } else {

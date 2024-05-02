@@ -1,13 +1,14 @@
 package com.trainh.tcookbe.serviceImpl;
 
-import com.trainh.tcookbe.mapper.blog.BlogBriefMapper;
-import com.trainh.tcookbe.mapper.blog.BlogSummaryMapper;
-import com.trainh.tcookbe.model.dto.blog.BlogBriefDto;
-import com.trainh.tcookbe.model.dto.blog.BlogSummaryDto;
+import com.trainh.tcookbe.mapper.blog.BriefBlogMapper;
+import com.trainh.tcookbe.mapper.blog.SummaryBlogMapper;
+import com.trainh.tcookbe.model.dto.blog.BriefBlogDTO;
+import com.trainh.tcookbe.model.dto.blog.SummaryBlogDTO;
 import com.trainh.tcookbe.model.entity.*;
 import com.trainh.tcookbe.model.enums.EStatus;
-import com.trainh.tcookbe.model.projection.blog.BlogSummaryProjection;
+import com.trainh.tcookbe.model.projection.blog.SummaryBlogProjection;
 import com.trainh.tcookbe.payload.request.blog.BlogCreationRequest;
+import com.trainh.tcookbe.payload.request.introduction.IntroductionBlogCreationRequest;
 import com.trainh.tcookbe.repository.BlogRepository;
 import com.trainh.tcookbe.repository.StatusRepository;
 import com.trainh.tcookbe.repository.TagRepository;
@@ -36,7 +37,7 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public String blogCreation(BlogCreationRequest request) {
+    public String createBlog(BlogCreationRequest request) {
         try {
             Optional<Status> statusOptional = statusRepository.findByName(EStatus.HIDE);
             Optional<User> userOptional = userRepository.findById(request.getUserId());
@@ -50,24 +51,24 @@ public class BlogServiceImpl implements BlogService {
                 Date createdAt = new Date();
 
                 Set<Introduction> introductions = new HashSet<>();
-                for (String introduction : request.getIntroduction()) {
-                    introductions.add(new Introduction(introduction));
+                for (IntroductionBlogCreationRequest introduction : request.getIntroduction()) {
+                    introductions.add(new Introduction(introduction.getId(), introduction.getContent()));
                 }
 
                 Set<Ingredient> ingredients = new HashSet<>();
-                request.getIngredient().forEach(ingredient -> ingredients.add(new Ingredient(ingredient)));
+                request.getIngredient().forEach(ingredient -> ingredients.add(new Ingredient(ingredient.getId(), ingredient.getName())));
 
                 Set<Recipe> recipes = new HashSet<>();
                 final int[] posRecipe = {1};
                 request.getRecipe().forEach(
                         recipe -> {
-                            HashSet<DetailsRecipe> detailsRecipes = new HashSet<>();
-                            recipe.getDetailsRecipe().forEach(
-                                    detailsRecipe -> {
-                                        detailsRecipes.add(new DetailsRecipe(detailsRecipe));
+                            HashSet<DetailRecipe> detailsRecipes = new HashSet<>();
+                            recipe.getDetailRecipe().forEach(
+                                    detailRecipe -> {
+                                        detailsRecipes.add(new DetailRecipe(detailRecipe.getId(), detailRecipe.getContent()));
                                     }
                             );
-                            recipes.add(new Recipe(recipe.getName(), posRecipe[0], recipe.getImage(), detailsRecipes));
+                            recipes.add(new Recipe(recipe.getId(), recipe.getName(), posRecipe[0], recipe.getImage(), detailsRecipes));
                             posRecipe[0]++;
 
                         }
@@ -77,7 +78,7 @@ public class BlogServiceImpl implements BlogService {
                 request.getCategory().forEach(category -> categories.add(new Category(category)));
 
                 Set<Tag> tags = new HashSet<>();
-                request.getTags().forEach(tag -> {
+                request.getTag().forEach(tag -> {
                     if (tag.isNew()) {
                         Tag newTag = new Tag(tag.getName().toLowerCase().trim());
                         Tag saveTag = tagRepository.saveAndFlush(newTag);
@@ -91,9 +92,11 @@ public class BlogServiceImpl implements BlogService {
 
                 ingredients.forEach(ingredient -> ingredient.setBlog(blog));
                 introductions.forEach(introduction -> introduction.setBlog(blog));
-                  recipes.forEach(recipe -> {
+                recipes.forEach(recipe -> {
                     recipe.setBlog(blog);
-                    recipe.getDetailsRecipe().forEach(detailsRecipe -> detailsRecipe.setRecipe(recipe));
+                    recipe.getDetailRecipe().forEach(detailsRecipe ->
+                            detailsRecipe.setRecipe(recipe)
+                    );
                 });
                 blogRepository.save(blog);
             } else {
@@ -116,11 +119,11 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public List<BlogBriefDto> getBlogBrief() {
+    public List<BriefBlogDTO> getBriefBlog() {
         try {
             return blogRepository.findFirst3ByStatusNameOrderByCreateAtDesc(EStatus.SHOW).stream(
             ).map(
-                    BlogBriefMapper.INSTANCE::blogBriefToDto
+                    BriefBlogMapper.INSTANCE::briefBlogToDto
             ).toList();
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -129,17 +132,15 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public List<BlogSummaryDto> getBlogSummary() {
+    public List<SummaryBlogDTO> getSummaryBlog() {
         try {
-            List<BlogSummaryProjection> blogSummaryDtoss = blogRepository.findFirst5ByStatusNameOrderByCreateAtDesc(EStatus.SHOW);
+            List<SummaryBlogProjection> summaryBlogProjection = blogRepository.findFirst5ByStatusNameOrderByCreateAtDesc(EStatus.SHOW);
 
-            List<BlogSummaryDto> blogSummaryDtos = blogRepository.findFirst5ByStatusNameOrderByCreateAtDesc(EStatus.SHOW).stream(
+            return blogRepository.findFirst5ByStatusNameOrderByCreateAtDesc(EStatus.SHOW).stream(
             ).map(
-                    BlogSummaryMapper.INSTANCE::blogSummaryDto
+                    SummaryBlogMapper.INSTANCE::blogSummaryDto
             ).toList();
 
-
-            return blogSummaryDtos;
         } catch (Exception e) {
             System.out.println(e.getMessage() + "at getBlogSummary()");
         }

@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class BlogDto {
+public class BlogDTO {
     private int id;
     private String link;
     private String name;
