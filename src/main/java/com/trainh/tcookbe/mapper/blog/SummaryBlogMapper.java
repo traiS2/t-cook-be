@@ -20,7 +20,7 @@ public interface SummaryBlogMapper {
     SummaryBlogMapper INSTANCE = Mappers.getMapper(SummaryBlogMapper.class);
 
     @Mapping(source = "introduction", target = "introduction", qualifiedByName = "mapIntroduction")
-    @Mapping(source = "tags", target = "tags", qualifiedByName = "mapTags")
+    @Mapping(source = "tag", target = "tag", qualifiedByName = "mapTag")
     @Mapping(source = "user.fullName", target = "user")
     SummaryBlogDTO blogSummaryDto(SummaryBlogProjection summaryBlogProjection);
 
@@ -32,9 +32,9 @@ public interface SummaryBlogMapper {
                 .collect(Collectors.toList());
     }
 
-    @Named("mapTags")
-    default List<TagDTO> mapTags(List<TagNameProjection> tags) {
-        return tags.stream()
+    @Named("mapTag")
+    default List<TagDTO> mapTag(List<TagNameProjection> tag) {
+        return tag.stream()
                 .map(tagNameProjection -> new TagDTO(tagNameProjection.getId(), tagNameProjection.getName()))
                 .collect(Collectors.toList());
     }

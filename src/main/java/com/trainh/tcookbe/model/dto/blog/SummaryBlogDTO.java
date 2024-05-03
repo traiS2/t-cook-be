@@ -22,6 +22,6 @@ public class SummaryBlogDTO {
     private String image;
     private Date createAt;
     private List<IntroductionDTO> introduction;
-    private List<TagDTO> tags;
+    private List<TagDTO> tag;
     private String user;
 }

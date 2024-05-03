@@ -15,6 +15,6 @@ public interface SummaryBlogProjection {
     String getImage();
     Date getCreateAt();
     List<IntroductionProjection> getIntroduction();
-    List<TagNameProjection> getTags();
+    List<TagNameProjection> getTag();
     UserFullNameProjection getUser();
 }
