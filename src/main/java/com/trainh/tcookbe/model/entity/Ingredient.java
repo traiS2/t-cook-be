@@ -1,5 +1,6 @@
 package com.trainh.tcookbe.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.trainh.tcookbe.model.id.IngredientPk;
 import jakarta.persistence.*;
 import lombok.*;
@@ -19,7 +20,7 @@ public class Ingredient {
     private String name;
 
     @Id
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "blog_id", referencedColumnName = "id")
     private Blog blog;
 

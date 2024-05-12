@@ -1,7 +1,8 @@
 package com.trainh.tcookbe.model.dto.blog;
 
+import com.trainh.tcookbe.model.dto.ingredient.IngredientDTO;
 import com.trainh.tcookbe.model.dto.introduction.IntroductionDTO;
-import com.trainh.tcookbe.model.dto.recipe.RecipeDto;
+import com.trainh.tcookbe.model.dto.recipe.RecipeDTO;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,7 +11,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class BlogDetailsDTO {
+public class DetailBlogDTO {
     private long id;
     private String link;
     private String name;
@@ -19,8 +20,9 @@ public class BlogDetailsDTO {
     private int cookingTime;
     private String servingSize;
     private Date createAt;
+    private List<IngredientDTO> ingredient;
     private List<IntroductionDTO> introduction;
 //    private List<String> tags;
     private String user;
-    private List<RecipeDto> recipes;
+    private List<RecipeDTO> recipe;
 }

@@ -2,12 +2,14 @@ package com.trainh.tcookbe.controller;
 
 import com.trainh.tcookbe.config.GlobalExceptionHandler;
 import com.trainh.tcookbe.model.dto.blog.BriefBlogDTO;
+import com.trainh.tcookbe.model.dto.blog.DetailBlogDTO;
 import com.trainh.tcookbe.model.dto.blog.SummaryBlogDTO;
 import com.trainh.tcookbe.model.entity.Blog;
 import com.trainh.tcookbe.payload.request.blog.BlogCreationRequest;
 import com.trainh.tcookbe.payload.response.MessageResponse;
 import com.trainh.tcookbe.service.BlogService;
 import jakarta.validation.Valid;
+import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -53,7 +55,7 @@ public class BlogController {
     public ResponseEntity<?> getBriefBlog() {
         try {
             List<BriefBlogDTO> briefBlogs = blogService.getBriefBlog();
-            if(briefBlogs != null) {
+            if (briefBlogs != null) {
                 return ResponseEntity.ok(briefBlogs);
             } else {
                 return ResponseEntity.badRequest().body(new MessageResponse("Error some thing!"));
@@ -67,8 +69,22 @@ public class BlogController {
     public ResponseEntity<?> getSummaryBlog() {
         try {
             List<SummaryBlogDTO> blogSummaries = blogService.getSummaryBlog();
-            if(blogSummaries != null) {
+            if (blogSummaries != null) {
                 return ResponseEntity.ok(blogSummaries);
+            } else {
+                return ResponseEntity.badRequest().body(new MessageResponse("Error some thing!"));
+            }
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(new MessageResponse("Error some thing!"));
+        }
+    }
+
+    @GetMapping("/get-detail-blog/{link}")
+    public ResponseEntity<?> getDetailBlog(@PathVariable("link") String link) {
+        try {
+            Optional<DetailBlogDTO> blog = blogService.getDetailBlog(link.toLowerCase().trim());
+            if (blog.isPresent()) {
+                return ResponseEntity.ok(blog);
             } else {
                 return ResponseEntity.badRequest().body(new MessageResponse("Error some thing!"));
             }

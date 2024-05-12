@@ -1,11 +1,14 @@
 package com.trainh.tcookbe.serviceImpl;
 
 import com.trainh.tcookbe.mapper.blog.BriefBlogMapper;
+import com.trainh.tcookbe.mapper.blog.DetailBlogMapper;
 import com.trainh.tcookbe.mapper.blog.SummaryBlogMapper;
 import com.trainh.tcookbe.model.dto.blog.BriefBlogDTO;
+import com.trainh.tcookbe.model.dto.blog.DetailBlogDTO;
 import com.trainh.tcookbe.model.dto.blog.SummaryBlogDTO;
 import com.trainh.tcookbe.model.entity.*;
 import com.trainh.tcookbe.model.enums.EStatus;
+import com.trainh.tcookbe.model.projection.blog.DetailBlogProjection;
 import com.trainh.tcookbe.model.projection.blog.SummaryBlogProjection;
 import com.trainh.tcookbe.payload.request.blog.BlogCreationRequest;
 import com.trainh.tcookbe.payload.request.introduction.IntroductionBlogCreationRequest;
@@ -111,7 +114,7 @@ public class BlogServiceImpl implements BlogService {
     @Override
     public Optional<Blog> getAllBlog() {
         try {
-            return blogRepository.findBlogByLink("chan-ga-sot-sa-otttttt");
+            return null;
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;
@@ -145,5 +148,18 @@ public class BlogServiceImpl implements BlogService {
             System.out.println(e.getMessage() + "at getBlogSummary()");
         }
         return null;
+    }
+
+    @Override
+    public Optional<DetailBlogDTO> getDetailBlog(String link) {
+        try {
+            Optional<DetailBlogProjection> detailBlogProjection;
+       detailBlogProjection = blogRepository.findBlogByLink(link);
+            System.out.println(detailBlogProjection.get().getRecipe().get(0).getDetailRecipe().get(0).getContent());
+            return detailBlogProjection.map(DetailBlogMapper.INSTANCE::detailBlogToDTO);
+        } catch (Exception e) {
+            System.out.println(e.getMessage() + "at getDetailBlog()");
+        }
+        return Optional.empty();
     }
 }

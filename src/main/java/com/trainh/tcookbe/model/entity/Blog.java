@@ -58,7 +58,7 @@ public class Blog implements Serializable {
     private Set<Introduction> introduction;
 
     @OneToMany(mappedBy = "blog", cascade = CascadeType.ALL)
-    private Set<Ingredient> ingredients;
+    private Set<Ingredient> ingredient;
 
     @ManyToMany
     @JoinTable(name = "tag_blog",
@@ -67,15 +67,15 @@ public class Blog implements Serializable {
     private Set<Tag> tag;
 
     @OneToMany(mappedBy = "blog", cascade = CascadeType.ALL)
-    private Set<Recipe> recipes;
+    private Set<Recipe> recipe;
 
     @ManyToMany()
     @JoinTable(name = "category_blog",
             joinColumns = @JoinColumn(name = "blog_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name="category_id", referencedColumnName = "id"))
-    private Set<Category> categories;
+    private Set<Category> category;
 
-    public Blog(String link, String name, String image, int levelOfDifficult, int cookingTime, String servingSize, User user, Status status, Date createAt, Set<Introduction> introduction, Set<Ingredient> ingredients, Set<Tag> tag, Set<Recipe> recipes, Set<Category> categories) {
+    public Blog(String link, String name, String image, int levelOfDifficult, int cookingTime, String servingSize, User user, Status status, Date createAt, Set<Introduction> introduction, Set<Ingredient> ingredient, Set<Tag> tag, Set<Recipe> recipe, Set<Category> category) {
         this.link = link;
         this.name = name;
         this.image = image;
@@ -86,10 +86,10 @@ public class Blog implements Serializable {
         this.status = status;
         this.createAt = createAt;
         this.introduction = introduction;
-        this.ingredients = ingredients;
+        this.ingredient = ingredient;
         this.tag = tag;
-        this.recipes = recipes;
-        this.categories = categories;
+        this.recipe = recipe;
+        this.category = category;
     }
 
 

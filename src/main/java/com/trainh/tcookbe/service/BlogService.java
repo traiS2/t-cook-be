@@ -1,6 +1,7 @@
 package com.trainh.tcookbe.service;
 
 import com.trainh.tcookbe.model.dto.blog.BriefBlogDTO;
+import com.trainh.tcookbe.model.dto.blog.DetailBlogDTO;
 import com.trainh.tcookbe.model.dto.blog.SummaryBlogDTO;
 import com.trainh.tcookbe.model.entity.Blog;
 import com.trainh.tcookbe.payload.request.blog.BlogCreationRequest;
@@ -13,5 +14,6 @@ public interface BlogService {
     public Optional<Blog> getAllBlog();
     public List<BriefBlogDTO> getBriefBlog();
     public List<SummaryBlogDTO> getSummaryBlog();
+    public Optional<DetailBlogDTO> getDetailBlog(String link);
 
 }

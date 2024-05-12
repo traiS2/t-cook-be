@@ -55,7 +55,7 @@ public class CategoryServiceImpl implements CategoryService {
             Optional<Blog> blogOptional = blogRepository.findById(blogId);
             if (blogOptional.isPresent()) {
                 Blog blog = blogOptional.get();
-                Set<Category> categorySet = blog.getCategories();
+                Set<Category> categorySet = blog.getCategory();
                 for (long categoryId : categories) {
                     Optional<Category> categoryOptional = categoryRepository.findById(categoryId);
                     Category category;
@@ -66,7 +66,7 @@ public class CategoryServiceImpl implements CategoryService {
                     }
                     categorySet.add(category);
                 }
-                blog.setCategories(categorySet);
+                blog.setCategory(categorySet);
                 blogRepository.save(blog);
             } else {
                 return "Blog not found";
