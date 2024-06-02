@@ -33,7 +33,7 @@ public class DataLoader {
         this.tagRepository = tagRepository;
     }
 
-    @PostConstruct
+//    @PostConstruct
     public void loadData() {
         loadRoleData();
         loadStatusData();

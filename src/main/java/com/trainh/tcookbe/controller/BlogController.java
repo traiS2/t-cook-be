@@ -8,6 +8,7 @@ import com.trainh.tcookbe.model.entity.Blog;
 import com.trainh.tcookbe.payload.request.blog.BlogCreationRequest;
 import com.trainh.tcookbe.payload.response.MessageResponse;
 import com.trainh.tcookbe.service.BlogService;
+import com.trainh.tcookbe.serviceImpl.BlogServiceImpl;
 import jakarta.validation.Valid;
 import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,10 +59,10 @@ public class BlogController {
             if (briefBlogs != null) {
                 return ResponseEntity.ok(briefBlogs);
             } else {
-                return ResponseEntity.badRequest().body(new MessageResponse("Error some thing!"));
+                return ResponseEntity.badRequest().body(new MessageResponse("Error some thing at brief blog list!"));
             }
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(new MessageResponse("Error some thing!"));
+            return ResponseEntity.badRequest().body(new MessageResponse("Error some thing at catch!" + e.getMessage()));
         }
     }
 

@@ -16,6 +16,6 @@ public interface BlogRepository extends JpaRepository<Blog, Long> {
     Optional<Blog> findById(long id);
     List<?> getAllByStatusName(EStatus status);
     Optional<DetailBlogProjection> findBlogByLink(String link);
-    List<BriefBlogProjection> findFirst3ByStatusNameOrderByCreateAtDesc(EStatus status);
+    List<BriefBlogProjection> findFirst100ByStatusNameOrderByCreateAtDesc(EStatus status);
     List<SummaryBlogProjection> findFirst5ByStatusNameOrderByCreateAtDesc(EStatus status);
 }

@@ -12,6 +12,7 @@ import com.trainh.tcookbe.model.projection.blog.DetailBlogProjection;
 import com.trainh.tcookbe.model.projection.blog.SummaryBlogProjection;
 import com.trainh.tcookbe.payload.request.blog.BlogCreationRequest;
 import com.trainh.tcookbe.payload.request.introduction.IntroductionBlogCreationRequest;
+import com.trainh.tcookbe.redis.RedisService;
 import com.trainh.tcookbe.repository.BlogRepository;
 import com.trainh.tcookbe.repository.StatusRepository;
 import com.trainh.tcookbe.repository.TagRepository;
@@ -19,24 +20,30 @@ import com.trainh.tcookbe.repository.UserRepository;
 import com.trainh.tcookbe.service.BlogService;
 import com.trainh.tcookbe.utils.Normalized;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 @Service
+@EnableCaching
 public class BlogServiceImpl implements BlogService {
 
     private final BlogRepository blogRepository;
     private final StatusRepository statusRepository;
     private final UserRepository userRepository;
     private final TagRepository tagRepository;
+    private final RedisService redisService;
 
     @Autowired
-    public BlogServiceImpl(BlogRepository blogRepository, StatusRepository statusRepository, UserRepository userRepository, TagRepository tagRepository) {
+    public BlogServiceImpl(BlogRepository blogRepository, StatusRepository statusRepository,
+                           UserRepository userRepository, TagRepository tagRepository, RedisService redisService) {
         this.blogRepository = blogRepository;
         this.statusRepository = statusRepository;
         this.userRepository = userRepository;
         this.tagRepository = tagRepository;
+        this.redisService = redisService;
     }
 
     @Override
@@ -59,7 +66,8 @@ public class BlogServiceImpl implements BlogService {
                 }
 
                 Set<Ingredient> ingredients = new HashSet<>();
-                request.getIngredient().forEach(ingredient -> ingredients.add(new Ingredient(ingredient.getId(), ingredient.getName())));
+                request.getIngredient()
+                       .forEach(ingredient -> ingredients.add(new Ingredient(ingredient.getId(), ingredient.getName())));
 
                 Set<Recipe> recipes = new HashSet<>();
                 final int[] posRecipe = {1};
@@ -121,17 +129,38 @@ public class BlogServiceImpl implements BlogService {
         }
     }
 
+    private static final String GET_BRIEF_CACHE_KEY = "getBriefBlog";
+
     @Override
     public List<BriefBlogDTO> getBriefBlog() {
+        List<BriefBlogDTO> cachedBriefBlog = null;
         try {
-            return blogRepository.findFirst3ByStatusNameOrderByCreateAtDesc(EStatus.SHOW).stream(
+            cachedBriefBlog = (List<BriefBlogDTO>) redisService.find(GET_BRIEF_CACHE_KEY);
+            if (cachedBriefBlog != null) {
+                System.out.println("hii");
+                return cachedBriefBlog;
+            }
+            cachedBriefBlog = blogRepository.findFirst100ByStatusNameOrderByCreateAtDesc(EStatus.SHOW).stream(
             ).map(
                     BriefBlogMapper.INSTANCE::briefBlogToDto
             ).toList();
+
+            redisService.save(GET_BRIEF_CACHE_KEY, cachedBriefBlog);
+
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-        return null;
+        return cachedBriefBlog;
+
+//        try {
+//            return blogRepository.findFirst100ByStatusNameOrderByCreateAtDesc(EStatus.SHOW).stream(
+//            ).map(
+//                    BriefBlogMapper.INSTANCE::briefBlogToDto
+//            ).toList();
+//        } catch (Exception e) {
+//            System.out.println(e.getMessage());
+//        }
+//        return null;
     }
 
     @Override
@@ -152,14 +181,23 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     public Optional<DetailBlogDTO> getDetailBlog(String link) {
+        doLongRunningTask();
         try {
             Optional<DetailBlogProjection> detailBlogProjection;
-       detailBlogProjection = blogRepository.findBlogByLink(link);
+            detailBlogProjection = blogRepository.findBlogByLink(link);
             System.out.println(detailBlogProjection.get().getRecipe().get(0).getDetailRecipe().get(0).getContent());
             return detailBlogProjection.map(DetailBlogMapper.INSTANCE::detailBlogToDTO);
         } catch (Exception e) {
             System.out.println(e.getMessage() + "at getDetailBlog()");
         }
         return Optional.empty();
+    }
+
+    private void doLongRunningTask() {
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
